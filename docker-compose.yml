@@ -1,0 +1,22 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-production}
+    container_name: small-api
+    ports:
+      - '${PORT:-4000}:4000'
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=4000
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      # Mount source code only in development
+      - ${DEV_VOLUMES:-/dev/null}:/app/src
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
